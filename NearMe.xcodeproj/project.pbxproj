@@ -15,6 +15,7 @@
 		3F26D2652AAEAFD900C14E12 /* PlaceAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F26D2642AAEAFD900C14E12 /* PlaceAnnotation.swift */; };
 		3F26D2682AAEB12100C14E12 /* CLLocation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F26D2672AAEB12100C14E12 /* CLLocation+Extensions.swift */; };
 		3F26D26B2AAEB9FC00C14E12 /* PlacesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F26D26A2AAEB9FC00C14E12 /* PlacesTableViewController.swift */; };
+		3F26D26D2AAED03900C14E12 /* PlaceDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F26D26C2AAED03900C14E12 /* PlaceDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		3F26D2642AAEAFD900C14E12 /* PlaceAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceAnnotation.swift; sourceTree = "<group>"; };
 		3F26D2672AAEB12100C14E12 /* CLLocation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocation+Extensions.swift"; sourceTree = "<group>"; };
 		3F26D26A2AAEB9FC00C14E12 /* PlacesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesTableViewController.swift; sourceTree = "<group>"; };
+		3F26D26C2AAED03900C14E12 /* PlaceDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				3F26D26A2AAEB9FC00C14E12 /* PlacesTableViewController.swift */,
+				3F26D26C2AAED03900C14E12 /* PlaceDetailViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -169,6 +172,7 @@
 			files = (
 				3F26D2652AAEAFD900C14E12 /* PlaceAnnotation.swift in Sources */,
 				3F26D2682AAEB12100C14E12 /* CLLocation+Extensions.swift in Sources */,
+				3F26D26D2AAED03900C14E12 /* PlaceDetailViewController.swift in Sources */,
 				3F26D2542AAE795300C14E12 /* ViewController.swift in Sources */,
 				3F26D2502AAE795300C14E12 /* AppDelegate.swift in Sources */,
 				3F26D2522AAE795300C14E12 /* SceneDelegate.swift in Sources */,
