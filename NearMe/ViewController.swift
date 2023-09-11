@@ -7,8 +7,184 @@
 
 import UIKit
 import MapKit
+import FirebaseAuth
 
 class ViewController: UIViewController {
+    private let label: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = "Log In"
+        label.font = .systemFont(ofSize: 24, weight:.semibold)
+        return label
+    }()
+    
+    // email
+    private let emailField: UITextField = {
+        let emailField = UITextField()
+        emailField.placeholder = "Email Address"
+        emailField.layer.borderWidth = 1
+        emailField.layer.borderColor = UIColor.black.cgColor
+        emailField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        emailField.leftViewMode = .always
+        return emailField
+    }()
+    
+    // password
+    private let passwordField: UITextField = {
+        let passwordField = UITextField()
+        passwordField.placeholder = "Password"
+        passwordField.layer.borderWidth = 1
+        passwordField.layer.borderColor = UIColor.black.cgColor
+        passwordField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        passwordField.leftViewMode = .always
+        return passwordField
+    }()
+    
+    // signin button
+    private let button: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .blue
+        button.setTitleColor(.white, for: .normal)
+        button.setTitle("Continue", for: .normal)
+        return button
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        view.addSubview(label)
+        view.addSubview(emailField)
+        view.addSubview(passwordField)
+        view.addSubview(button)
+        
+        button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+//        // sign-out button todo
+//        if FirebaseAuth.Auth.auth().currentUser != nil {
+//            label.isHidden  = true
+//            emailField.isHidden = true
+//            passwordField.isHidden = true
+//            button.isHidden = true
+//
+//        }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        label.frame = CGRect(x: 0, y: 100, width: view.frame.size.width, height: 80)
+        emailField.frame = CGRect(x: 20,
+                                  y: label.frame.origin.y + label.frame.size.height + 10,
+                                  width: view.frame.size.width - 40,
+                                  height: 50)
+        passwordField.frame = CGRect(x: 20,
+                                     y: emailField.frame.origin.y + emailField.frame.size.height + 10,
+                                     width: view.frame.size.width - 40,
+                                     height: 50)
+        button.frame = CGRect(x: 20,
+                              y: passwordField.frame.origin.y + passwordField.frame.size.height + 10,
+                              width: view.frame.size.width - 40,
+                              height: 80)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        emailField.becomeFirstResponder()
+    }
+
+    @objc func didTapButton() {
+        print("Continue button tapped")
+        guard let email = emailField.text, !email.isEmpty,
+              let password = passwordField.text, !password.isEmpty else {
+            print("Missing Field!")
+            return
+        }
+        
+        // setup firebase steps:
+        // get auth instance
+        // attempt sign in
+        // if failure, present alert to create account
+        // if user continues, create account
+        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] result, error in
+            guard let strongSelf = self else {
+                return
+            }
+            guard error == nil else {
+                // show account creation
+                strongSelf.showCreateAccount(email: email, password: password)
+                return
+            }
+            print("You've signed in")
+            strongSelf.label.isHidden = true
+            strongSelf.emailField.isHidden = true
+            strongSelf.passwordField.isHidden = true
+            strongSelf.button.isHidden = true
+            
+            strongSelf.emailField.resignFirstResponder()
+            strongSelf.passwordField.resignFirstResponder()
+        })
+        
+        // check sign in on app launch
+        // allow user to sign out
+        
+        present (SecondViewController(), animated: true)
+        
+    }
+    
+    // alert
+    func showCreateAccount(email: String, password: String) {
+        let alert = UIAlertController(title: "Create Account",
+                                      message: "Would you like to create an account",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Continue",
+                                      style: .default,
+                                      handler: {_ in
+            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { [weak self] result, error in
+                guard let strongSelf = self else {
+                    return
+                }
+                guard error == nil else {
+                    // show account creation
+                    print("Account Creation failed")
+                    return
+                }
+                print("You've signed in")
+                strongSelf.label.isHidden = true
+                strongSelf.emailField.isHidden = true
+                strongSelf.passwordField.isHidden = true
+                strongSelf.button.isHidden = true
+                
+                strongSelf.emailField.resignFirstResponder()
+                strongSelf.passwordField.resignFirstResponder()
+            } )
+            
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel",
+                                      style: .cancel,
+                                      handler: {_ in
+            
+        }))
+        present(alert, animated: true)
+    }
+}
+
+class SecondViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .yellow
+        let button = UIButton()
+        button.setTitle("Press me", for: .normal)
+        button.backgroundColor = .blue
+        view.addSubview(button)
+        button.frame = CGRect(x: 150, y: 300, width: 100, height: 50)
+        button.layer.cornerRadius = 25
+        button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+    }
+
+    @objc func didTapButton() {
+        present (ThirdViewController(), animated: true)
+    }
+}
+
+class ThirdViewController: UIViewController {
     
     var locationManager: CLLocationManager?
     private var places: [PlaceAnnotation] = [] // places array
@@ -129,7 +305,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UITextFieldDelegate {
+extension ThirdViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         let text = textField.text ?? ""
@@ -142,7 +318,7 @@ extension ViewController: UITextFieldDelegate {
     }
 }
 
-extension ViewController: MKMapViewDelegate {
+extension ThirdViewController: MKMapViewDelegate {
     
     private func clearAllSelections() {
         self.places = self.places.map { place in
@@ -165,7 +341,7 @@ extension ViewController: MKMapViewDelegate {
     }
 }
 
-extension ViewController: CLLocationManagerDelegate {
+extension ThirdViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
