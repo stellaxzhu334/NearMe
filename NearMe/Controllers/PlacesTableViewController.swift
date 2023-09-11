@@ -60,7 +60,7 @@ class PlacesTableViewController: UITableViewController {
         content.secondaryText = formatDistanceForDisplay(calculateDistance(from: userLocation, to: place.location)) // distance calculated
         
         cell.contentConfiguration = content
-        cell.backgroundColor = place.isSelected ? UIColor.lightGray: UIColor.clear
+        cell.backgroundColor = place.isSelected ? UIColor.blue: UIColor.clear
         return cell
     }
     
