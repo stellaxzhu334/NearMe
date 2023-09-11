@@ -62,12 +62,19 @@ class placeDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented") // needed for storyboard, no need to care now
     }
     
-//    @objc func directionsButtonTapped(_ sender: UIButton) {
-//        let coordinate  = place.location.coordinate
-//        guard let url = URL(string: "http://maps.apple.com/?daddr=\(coordinate.latitude),\(coordinate.longitude)") else { return }
-//
-//        UIApplication.shared.open(url)
-//    }
+    @objc func directionsButtonTapped(_ sender: UIButton) {
+        let coordinate  = place.location.coordinate
+        guard let url = URL(string: "http://maps.apple.com/?daddr=\(coordinate.latitude),\(coordinate.longitude)") else { return }
+
+        UIApplication.shared.open(url)
+    }
+    
+    @objc func callButtonTapped(_ sender: UIButton) {
+        // place/phone = +(XXX)-XXX-XXX
+        // we need = XXXXXXXXX
+        guard let url = URL(string: "tel://\(place.phone.formatPhoneForCall)") else { return }
+        UIApplication.shared.open(url)
+    }
     
     private func setupUI() {
         
@@ -92,7 +99,8 @@ class placeDetailViewController: UIViewController {
         contactStackView.axis = .horizontal
         contactStackView.spacing = UIStackView.spacingUseSystem
         
-//        directionsButton.addTarget(self, action: #selector(directionsButtonTapped), for: .touchUpInside)
+        directionsButton.addTarget(self, action: #selector(directionsButtonTapped), for: .touchUpInside)
+        callButton.addTarget(self, action: #selector(callButtonTapped), for: .touchUpInside)
         
         contactStackView.addArrangedSubview(directionsButton)
         contactStackView.addArrangedSubview(callButton)
