@@ -10,7 +10,7 @@ import CoreLocation
 
 extension CLLocation {
     static var `default`: CLLocation {
-        CLLocation(latitude: 36.063457, longitude: -95.880516)  // default is apple center
+        CLLocation(latitude: 33.77617599701072, longitude: -84.39485929261765)  // default is Georgia Tech
     }
 }
 
