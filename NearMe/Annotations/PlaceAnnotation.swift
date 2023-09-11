@@ -36,4 +36,8 @@ class PlaceAnnotation: MKPointAnnotation {
         mapItem.placemark.location ?? CLLocation.default
     }
     
+    var url: URL? {
+        mapItem.url
+    }
+    
 }

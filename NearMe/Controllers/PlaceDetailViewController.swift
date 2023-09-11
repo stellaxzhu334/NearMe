@@ -47,6 +47,14 @@ class placeDetailViewController: UIViewController {
         return button
     } ()
     
+    var urlButton: UIButton = {
+        var config = UIButton.Configuration.bordered()
+        let button = UIButton(configuration: config)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Place Web Link", for: .normal)
+        return button
+    } ()
+    
     init(place: PlaceAnnotation) {
         self.place = place
         super.init(nibName: nil, bundle: nil)
@@ -73,6 +81,11 @@ class placeDetailViewController: UIViewController {
         // place/phone = +(XXX)-XXX-XXX
         // we need = XXXXXXXXX
         guard let url = URL(string: "tel://\(place.phone.formatPhoneForCall)") else { return }
+        UIApplication.shared.open(url)
+    }
+    
+    @objc func urlButtonTapped(_ sender: UIButton) {
+        guard let url = place.url else { return }
         UIApplication.shared.open(url)
     }
     
@@ -106,6 +119,16 @@ class placeDetailViewController: UIViewController {
         contactStackView.addArrangedSubview(callButton)
         
         stackView.addArrangedSubview(contactStackView)
+        
+        let contactStackView2 = UIStackView()  // for adding two buttons horizontally
+        contactStackView2.translatesAutoresizingMaskIntoConstraints = false
+        contactStackView2.axis = .horizontal
+        contactStackView2.spacing = UIStackView.spacingUseSystem
+        
+        urlButton.addTarget(self, action: #selector(urlButtonTapped), for: .touchUpInside)
+        contactStackView2.addArrangedSubview(urlButton)
+        
+        stackView.addArrangedSubview(contactStackView2)
         
         view.addSubview(stackView)
     }
