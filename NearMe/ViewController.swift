@@ -83,7 +83,22 @@ class ViewController: UIViewController {
                 print("Location cannot be determined or restricted.")
             @unknown default:
                 print("Unknown error. Unable to get location.")
-        } 
+        }
+    }
+    
+    private func presentPlacesSheet(places: [PlaceAnnotation]) {
+        
+        guard let locationManager = locationManager, // use locationManager to access user's location
+              let userLocation = locationManager.location
+        else { return }
+        
+        let placesTVC = PlacesTableViewController(userLocation: userLocation, places: places)
+        placesTVC.modalPresentationStyle = .pageSheet
+        if let sheet = placesTVC.sheetPresentationController {
+            sheet.prefersGrabberVisible = true // coming from the bottom
+            sheet.detents = [.medium(), .large()] // can be half screen or full screen
+            present(placesTVC, animated: true)
+        }
     }
 
     private func findNearbyPlaces(by query: String) {
@@ -97,14 +112,14 @@ class ViewController: UIViewController {
         
         let search = MKLocalSearch(request: request)
         search.start { [weak self] response, error in // weak self does not capture reference
-            guard let response = response, error == nil else { return }
-            
+            guard let response = response, error == nil else { return } // response are results
+            // pin annotation on results
             let places = response.mapItems.map(PlaceAnnotation.init)
             places.forEach { place in
                 self?.mapView.addAnnotation(place)
             }
-            
-            print(response.mapItems)
+            // show results in table by PlacesTableViewController
+            self?.presentPlacesSheet(places: places)
         }
         
     }
