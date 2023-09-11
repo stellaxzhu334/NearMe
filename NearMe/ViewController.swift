@@ -11,10 +11,12 @@ import MapKit
 class ViewController: UIViewController {
     
     var locationManager: CLLocationManager?
+    private var places: [PlaceAnnotation] = [] // places array
     
     //  lazy: no need to create MapKit many times
     lazy var mapView: MKMapView = {
         let map = MKMapView()
+        map.delegate = self // self is the viewController
         map.showsUserLocation = true // have not connected your location
         map.translatesAutoresizingMaskIntoConstraints = false
         return map
@@ -114,12 +116,14 @@ class ViewController: UIViewController {
         search.start { [weak self] response, error in // weak self does not capture reference
             guard let response = response, error == nil else { return } // response are results
             // pin annotation on results
-            let places = response.mapItems.map(PlaceAnnotation.init)
-            places.forEach { place in
+            self?.places = response.mapItems.map(PlaceAnnotation.init)
+            self?.places.forEach { place in
                 self?.mapView.addAnnotation(place)
             }
             // show results in table by PlacesTableViewController
-            self?.presentPlacesSheet(places: places)
+            if let places = self?.places { // self?. should not be wrapped
+                self?.presentPlacesSheet(places: places)
+            }
         }
         
     }
@@ -135,6 +139,29 @@ extension ViewController: UITextFieldDelegate {
             findNearbyPlaces(by: text)
         }
         return true
+    }
+}
+
+extension ViewController: MKMapViewDelegate {
+    
+    private func clearAllSelections() {
+        self.places = self.places.map { place in
+            place.isSelected = false
+            return place
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
+        
+        // clear all selections
+        clearAllSelections()
+        
+        guard let selectedAnnotation = annotation as? PlaceAnnotation else { return } // cast as PlaceAnnotation
+        let placeAnnotation = self.places.first(where: {$0.id == selectedAnnotation.id}) // get the ref from self.places
+        placeAnnotation?.isSelected = true // use it in the placesTableViewController
+        
+        presentPlacesSheet(places: self.places)
+        
     }
 }
 
