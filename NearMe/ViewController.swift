@@ -97,6 +97,7 @@ class ViewController: UIViewController {
             print("Missing Field!")
             return
         }
+        print(1)
         
         // setup firebase steps:
         // get auth instance
@@ -104,14 +105,19 @@ class ViewController: UIViewController {
         // if failure, present alert to create account
         // if user continues, create account
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password, completion: { [weak self] result, error in
+            print(2)
             guard let strongSelf = self else {
                 return
             }
+            print(22)
+            print(result)
+            print(error)
             guard error == nil else {
                 // show account creation
                 strongSelf.showCreateAccount(email: email, password: password)
                 return
             }
+            print(3)
             print("You've signed in")
             strongSelf.label.isHidden = true
             strongSelf.emailField.isHidden = true
@@ -120,24 +126,29 @@ class ViewController: UIViewController {
             
             strongSelf.emailField.resignFirstResponder()
             strongSelf.passwordField.resignFirstResponder()
+            
         })
         
         // check sign in on app launch
         // allow user to sign out
         
-        present (SecondViewController(), animated: true)
+//        present (SecondViewController(), animated: true)
         
     }
     
     // alert
     func showCreateAccount(email: String, password: String) {
+        print("here")
         let alert = UIAlertController(title: "Create Account",
                                       message: "Would you like to create an account",
                                       preferredStyle: .alert)
+        print("here1")
         alert.addAction(UIAlertAction(title: "Continue",
                                       style: .default,
                                       handler: {_ in
+            print(222)
             FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { [weak self] result, error in
+                print(2222)
                 guard let strongSelf = self else {
                     return
                 }
@@ -154,7 +165,10 @@ class ViewController: UIViewController {
                 
                 strongSelf.emailField.resignFirstResponder()
                 strongSelf.passwordField.resignFirstResponder()
-            } )
+                
+                let secondVC = SecondViewController()
+                strongSelf.present(secondVC, animated: true, completion: nil)
+            })
             
         }))
         alert.addAction(UIAlertAction(title: "Cancel",
