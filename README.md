@@ -2,7 +2,7 @@
 
 ## An app allows you to find anything nearby with your prompt 🚩
 
-NearMEe is a location-based iOS application utilizing Firebase as the backend infrastructure to enhance the user's experience in discovering nearby places of interest. The core functionalities of this app include robust user authentication via Firebase Auth and seamless integration with device location services.
+NearMe is a location-based iOS application utilizing Firebase as the backend infrastructure to enhance the user's experience in discovering nearby places of interest. The core functionalities of this app include robust user authentication via Firebase Auth and seamless integration with device location services.
 
 ### Key Features:
 
